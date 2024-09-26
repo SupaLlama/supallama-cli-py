@@ -96,10 +96,13 @@ def llama_code_improve(
     """
     """Read data from stdin or a file."""
     input_code = input_file.read()
-    print(input_code)
 
-    prompt = f"read over the following code, look for any errors, summarize what the code does, and then output the summary in a {language} comment block, followed by a list of suggested improvements in a {language} comment block, followed by the input code itself with helpful, inline {language} comments added on how to improve problematic lines of code: {input_code}"
+    prompt = ("Read over the following code and look for any errors "
+        "or examples of poor coding practices. Then output the code "
+        f"with helpful, inline {language} comments added on how to " 
+        f"any improve problematic lines of code. \n{input_code}")
     
+    print(prompt)
     response = client.chat.completions.create(
         model="accounts/fireworks/models/llama-v3p1-8b-instruct",
         messages=[{
