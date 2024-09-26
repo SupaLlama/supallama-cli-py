@@ -87,7 +87,7 @@ def llama_code_improve(
             metavar="💬 Input Code for the 🤖 Model",
         )
     ] = sys.stdin,
-    language: str = "TypeScript and/or React JSX",
+    language: str = "TypeScript and possibly Functional React Components or possibly React Server Components or possibly React Server Actions",
     comment_code: bool = False,
     verbose: bool = False,
     ):
@@ -98,16 +98,16 @@ def llama_code_improve(
     input_code = input_file.read()
     print(input_code)
 
-    # prompt = f"read over the following code, look for any errors, summarize what the code does, and then output the summary in a {language} comment block, followed by a list of suggested improvements in a {language} comment block, followed by the input code itself with helpful, inline {language} comments added on how to improve problematic lines of code: {input_code}"
+    prompt = f"read over the following code, look for any errors, summarize what the code does, and then output the summary in a {language} comment block, followed by a list of suggested improvements in a {language} comment block, followed by the input code itself with helpful, inline {language} comments added on how to improve problematic lines of code: {input_code}"
     
-    # response = client.chat.completions.create(
-    #     model="accounts/fireworks/models/llama-v3p1-8b-instruct",
-    #     messages=[{
-    #         "role": "user",
-    #         "content": prompt, 
-    #     }],
-    # )
-    # print(response.choices[0].message.content)
+    response = client.chat.completions.create(
+        model="accounts/fireworks/models/llama-v3p1-8b-instruct",
+        messages=[{
+            "role": "user",
+            "content": prompt, 
+        }],
+    )
+    print(response.choices[0].message.content)
 
 
 @app.command()
