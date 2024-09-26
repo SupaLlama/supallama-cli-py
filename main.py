@@ -1,4 +1,5 @@
-import os
+import os, sys
+
 from typing_extensions import Annotated
 
 from dotenv import load_dotenv
@@ -20,7 +21,7 @@ client = Fireworks(api_key=os.getenv("FIREWORKS_AI_KEY"))
 
 @app.command()
 def llama_chat(
-    content: Annotated[
+    prompt_content: Annotated[
         str,
         typer.Argument(
             help="💬 Content to 🗣️  Say to the 🤖 Model",
@@ -35,7 +36,7 @@ def llama_chat(
         model="accounts/fireworks/models/llama-v3p1-8b-instruct",
         messages=[{
             "role": "user",
-            "content": content, 
+            "content": prompt_content, 
         }],
     )
     print(response.choices[0].message.content)
@@ -43,11 +44,11 @@ def llama_chat(
 
 @app.command()
 def llama_code(
-    command: Annotated[
+    prompt: Annotated[
         str,
         typer.Argument(
-            help="💬 Command to 🗣️  Say to the 🤖 Model",
-            metavar="💬 Command for the 🤖 Model",
+            help="💬 Prompt to 🗣️  Say to the 🤖 Model",
+            metavar="💬 Prompt for the 🤖 Model",
         )
     ] = "Generate a functional react server component and react server action for a signup form with fields for the first name, last name, email, password, password confirmation fields and a submit button that invokes a react server action. Use typescript and the shadcn/ui component library for the react code.",
     code_only: bool = False,
@@ -59,22 +60,54 @@ def llama_code(
     """
     
     if code_only:
-        command = f"{command} and only generate the code in the output"
+        prompt = f"{prompt} and only generate the code in the output"
 
     if comment_code:
         if verbose:
-            command = f"{command} and annotate the code with verbose and explanative comments"
+            prompt = f"{prompt} and annotate the code with verbose and explanative comments"
         else:
-            command = f"{command} and annotate the code with concise but explanative comments"
+            prompt = f"{prompt} and annotate the code with concise but explanative comments"
 
     response = client.chat.completions.create(
         model="accounts/fireworks/models/llama-v3p1-8b-instruct",
         messages=[{
             "role": "user",
-            "content": command, 
+            "content": prompt, 
         }],
     )
     print(response.choices[0].message.content)
+
+
+@app.command()
+def llama_code_improve(
+    input_file: Annotated[
+        typer.FileText,
+        typer.Argument(
+            help="💬 Input Code to 🗣️  Say to the 🤖 Model",
+            metavar="💬 Input Code for the 🤖 Model",
+        )
+    ] = sys.stdin,
+    language: str = "TypeScript and/or React JSX",
+    comment_code: bool = False,
+    verbose: bool = False,
+    ):
+    """
+    🗣️ 💬 Ask 🦙 Llama 3.1 8B Instruct to ✍️ write 📝 code
+    """
+    """Read data from stdin or a file."""
+    input_code = input_file.read()
+    print(input_code)
+
+    # prompt = f"read over the following code, look for any errors, summarize what the code does, and then output the summary in a {language} comment block, followed by a list of suggested improvements in a {language} comment block, followed by the input code itself with helpful, inline {language} comments added on how to improve problematic lines of code: {input_code}"
+    
+    # response = client.chat.completions.create(
+    #     model="accounts/fireworks/models/llama-v3p1-8b-instruct",
+    #     messages=[{
+    #         "role": "user",
+    #         "content": prompt, 
+    #     }],
+    # )
+    # print(response.choices[0].message.content)
 
 
 @app.command()
