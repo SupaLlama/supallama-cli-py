@@ -1,4 +1,4 @@
-import os, sys
+import os, subprocess, sys
 
 from typing_extensions import Annotated
 
@@ -97,12 +97,14 @@ def llama_code_improve(
     """Read data from stdin or a file."""
     input_code = input_file.read()
 
-    prompt = ("Read over the following code and look for any errors "
-        "or examples of poor coding practices. Then output the code "
-        f"with helpful, inline {language} comments added on how to " 
+    # Echo the input code back first so that the user can see the output easily in a diff
+    print(input_code)
+
+    prompt = ("Read over the following code and look for any errors or "
+        "examples of poor coding practices. Then output the input code "
+        f"itself with helpful, inline {language} comments added on how to " 
         f"any improve problematic lines of code. \n{input_code}")
     
-    print(prompt)
     response = client.chat.completions.create(
         model="accounts/fireworks/models/llama-v3p1-8b-instruct",
         messages=[{
@@ -115,20 +117,114 @@ def llama_code_improve(
 
 @app.command()
 def fine_tune(
-    model: Annotated[
+    display_name: Annotated[
         str,
-        typer.Argument()
-    ], 
-    with_data: str = None,
-    with_webpage: str = None,
+        typer.Argument(
+            help="💬 Input Code to 🗣️  Say to the 🤖 Model",
+            metavar="💬 Input Code for the 🤖 Model",
+        )
+    ] = "Unnamed Fine-tuning job",
+    with_settings_file: str = "test_settings.yaml",
     ):
     """
     🛠️ 🦾📈 Fine-tune a 🤖 Model with 💽 data in a 💾 file or a 🌐📄 webpage 
     """
-    if with_data:
-        print(f"Okay, which file?")
-    if with_webpage:
-        print(f"Okay, which page?")
+    result = subprocess.run(
+        [
+            'firectl',
+            'create',
+            'fine-tuning-job',
+            '--settings-file',
+            with_settings_file,
+            '--display-name',
+            display_name
+        ],
+        capture_output=True,
+        text=True
+    )
+    print(result.stdout)    
+    print(result.stderr)    
+
+
+@app.command()
+def fine_tune_status(
+    fine_tuning_job_id: Annotated[
+        str,
+        typer.Argument(
+            help="💬 Input Code to 🗣️  Say to the 🤖 Model",
+            metavar="💬 Input Code for the 🤖 Model",
+        )
+    ],
+    ):
+    """
+    🛠️ 🦾📈 Fine-tune a 🤖 Model with 💽 data in a 💾 file or a 🌐📄 webpage 
+    """
+    result = subprocess.run(
+        [
+            'firectl',
+            'get',
+            'fine-tuning-job',
+            fine_tuning_job_id
+        ],
+        capture_output=True,
+        text=True
+    )
+    print(result.stdout)    
+    print(result.stderr)    
+
+
+@app.command()
+def deploy_model(
+    fine_tuned_model_id: Annotated[
+        str,
+        typer.Argument(
+            help="💬 Input Code to 🗣️  Say to the 🤖 Model",
+            metavar="💬 Input Code for the 🤖 Model",
+        )
+    ],
+    ):
+    """
+    🛠️ 🦾📈 Fine-tune a 🤖 Model with 💽 data in a 💾 file or a 🌐📄 webpage 
+    """
+    result = subprocess.run(
+        [
+            'firectl',
+            'deploy',
+            fine_tuned_model_id,
+        ],
+        capture_output=True,
+        text=True
+    )
+    print(result.stdout)    
+    print(result.stderr)  
+
+
+@app.command()
+def get_model(
+    fine_tuned_model_id: Annotated[
+        str,
+        typer.Argument(
+            help="💬 Input Code to 🗣️  Say to the 🤖 Model",
+            metavar="💬 Input Code for the 🤖 Model",
+        )
+    ],
+    ):
+    """
+    🛠️ 🦾📈 Fine-tune a 🤖 Model with 💽 data in a 💾 file or a 🌐📄 webpage 
+    """
+    result = subprocess.run(
+        [
+            'firectl',
+            'get',
+            'model',
+            fine_tuned_model_id,
+        ],
+        capture_output=True,
+        text=True
+    )
+    print(result.stdout)    
+    print(result.stderr)  
+
 
 
 @app.command()

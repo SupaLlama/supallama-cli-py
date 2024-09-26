@@ -1,0 +1,13 @@
+# The ID of the dataset that will be used
+dataset: test1
+
+text_completion:
+  # How the fields of the JSON dataset should be formatted into the input text.
+  input_template: "### GIVEN THE CONTEXT: {context}  ### INSTRUCTION: {instruction}  ### RESPONSE IS: "
+
+  # How the fields of the JSON dataset should be formatted into the output text.
+  output_template: "ANSWER: {response}"
+
+# The Hugging Face model name of the base model.
+base_model: accounts/fireworks/models/llama-v3p1-8b-instruct
+
