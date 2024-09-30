@@ -56,7 +56,7 @@ def llama_code(
     verbose: bool = False,
     ):
     """
-    🗣️ 💬 Ask 🦙 Llama 3.1 8B Instruct to ✍️ write 📝 code
+    💬 Ask 🦙 Llama 3.1 8B Instruct to ✍️ write 📝 code
     """
     
     if code_only:
@@ -83,7 +83,7 @@ def llama_code_improve(
     input_file: Annotated[
         typer.FileText,
         typer.Argument(
-            help="💬 Input Code to 🗣️  Say to the 🤖 Model",
+            help="💬 Code you would like to have improved by the 🤖 Model",
             metavar="💬 Input Code for the 🤖 Model",
         )
     ] = sys.stdin,
@@ -92,7 +92,7 @@ def llama_code_improve(
     verbose: bool = False,
     ):
     """
-    🗣️ 💬 Ask 🦙 Llama 3.1 8B Instruct to ✍️ write 📝 code
+    💬 Ask 🦙 Llama 3.1 8B Instruct to analyze and improve upon some 📝 code
     """
     """Read data from stdin or a file."""
     input_code = input_file.read()
@@ -120,14 +120,14 @@ def fine_tune(
     display_name: Annotated[
         str,
         typer.Argument(
-            help="💬 Input Code to 🗣️  Say to the 🤖 Model",
-            metavar="💬 Input Code for the 🤖 Model",
+            help="💬 Dataset to use for Fine-tuning to the 🤖 Model",
+            metavar="💬  for the 🤖 Model",
         )
     ] = "Unnamed Fine-tuning job",
     with_settings_file: str = "test_settings.yaml",
     ):
     """
-    🛠️ 🦾📈 Fine-tune a 🤖 Model with 💽 data in a 💾 file or a 🌐📄 webpage 
+    🛠️ 🦾📈 Fine-tune a 🤖 Model with 💽 data in a jsonl 💾 file 
     """
     result = subprocess.run(
         [
@@ -151,13 +151,13 @@ def fine_tune_status(
     fine_tuning_job_id: Annotated[
         str,
         typer.Argument(
-            help="💬 Input Code to 🗣️  Say to the 🤖 Model",
-            metavar="💬 Input Code for the 🤖 Model",
+            help="🛠 🦾📈 Fine-tuning Job ID to check on for status",
+            metavar="🛠 🦾📈 Fine-tuning Job ID",
         )
     ],
     ):
     """
-    🛠️ 🦾📈 Fine-tune a 🤖 Model with 💽 data in a 💾 file or a 🌐📄 webpage 
+    Check on the Status of a 🛠️ 🦾📈 Fine-tuning Job 
     """
     result = subprocess.run(
         [
@@ -178,13 +178,13 @@ def deploy_model(
     fine_tuned_model_id: Annotated[
         str,
         typer.Argument(
-            help="💬 Input Code to 🗣️  Say to the 🤖 Model",
-            metavar="💬 Input Code for the 🤖 Model",
+            help="Deploy a 🛠️ 🦾📈 Fine-tuned 🤖 Model",
+            metavar="ID of the Fine-tuned 🤖 Model",
         )
     ],
     ):
     """
-    🛠️ 🦾📈 Fine-tune a 🤖 Model with 💽 data in a 💾 file or a 🌐📄 webpage 
+    Deploy a 🛠️ 🦾📈 Fine-tuned 🤖 Model to a Serverless Endpoint
     """
     result = subprocess.run(
         [
@@ -204,13 +204,13 @@ def get_model(
     fine_tuned_model_id: Annotated[
         str,
         typer.Argument(
-            help="💬 Input Code to 🗣️  Say to the 🤖 Model",
-            metavar="💬 Input Code for the 🤖 Model",
+            help="ID of a 🛠️ 🦾📈 Fine-tuned 🤖 Model",
+            metavar="ID of a 🛠️ 🦾📈 Fine-tuned 🤖 Model",
         )
     ],
     ):
     """
-    🛠️ 🦾📈 Fine-tune a 🤖 Model with 💽 data in a 💾 file or a 🌐📄 webpage 
+    Get the details of a 🛠️ 🦾📈 Fine-tuned 🤖 Model
     """
     result = subprocess.run(
         [
@@ -264,7 +264,7 @@ def mixtral_code(
     verbose: bool = False,
     ):
     """
-    🗣️ 💬 Chat with Ⓜ️  Mixtral 8x7B Instruct 
+    💬 Ask Ⓜ️  Mixtral 8x7B Instruct ✍️ write 📝 code
     """
     
     if code_only:
